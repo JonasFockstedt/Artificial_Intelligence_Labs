@@ -5,23 +5,24 @@ totalPot = 0
 
 # Rank: {2, 3, 4, 5, 6, 7, 8, 9, T, J, Q, K, A}
 # Suit: {s, h, d, c}
-rank = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
-suit = ['s', 'h', 'd', 'c']
 deck = list()
 
 
 def generateDeck():
     global deck
-    index = 1
-    for cardRank in rank:
-        for cardSuit in suit:
-            deck.append(rank[cardRank]+suit[cardSuit])
-            
+    ranks = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
+    suits = ['s', 'h', 'd', 'c']
+    index = 0
+    for cardSuit in suits:
+        print(cardSuit)
+        for cardRank in ranks:
+            deck.append(cardRank+cardSuit)
+
     random.shuffle(deck)
 
 
 def assignHand(agent):
-    rank.pop(random.randrange(0,12))
+    #ranks.pop(random.randrange(0, 12))
     print(f'Hand dealt to {agent.agentType} agent')
 
 
@@ -31,8 +32,8 @@ if __name__ == '__main__':
     totalPot += randomAgent.bet()
     print(f'Total pot: ${totalPot}')
     assignHand(randomAgent)
-    testHand = rank[0] + suit[0]
-    print(testHand)
+    #testHand = ranks[0] + suits[0]
+    # print(testHand)
     generateDeck()
     for card in deck:
-        print(deck[card])
+        print(card)
