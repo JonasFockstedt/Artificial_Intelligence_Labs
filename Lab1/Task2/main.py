@@ -35,13 +35,13 @@ def assignHand(agent):
 
 def compareHands(firstAgent, secondAgent):
     global totalPot
-    if firstAgent.calculateHand() and secondAgent.calculateHand() == 'High cards!':
+    if firstAgent.calculateHand() and secondAgent.calculateHand() == 'High cards!' or 'Two of a kind!' or 'Three of a kind!':
         handTuple = tuple(zip(firstAgent.hand, secondAgent.hand))
         for index in handTuple:
             if index[0] > index[1]:
                 assignWin(firstAgent)
                 break
-            else:
+            elif index[0] < index[1]:
                 assignWin(secondAgent)
                 break
 
@@ -49,7 +49,8 @@ def compareHands(firstAgent, secondAgent):
 def assignWin(agent):
     global totalPot
     print(f'{agent.agentType} agent wins!')
-    agent.moneyWon = totalPot
+    agent.moneyWon += totalPot
+    agent.wins += 1
     totalPot = 0
     print()
 
@@ -67,28 +68,41 @@ def cardDealingPhase():
     print('Card dealing phase:')
     assignHand(randomAgent)
     assignHand(fixedAgent)
+
+
+def showdownPhase():
     randomAgent.revealHand()
     fixedAgent.revealHand()
+    compareHands(randomAgent, fixedAgent)
+
+
+def resetHands(firstAgent, secondAgent):
+    firstAgent.hand.clear()
+    secondAgent.hand.clear()
 
 
     # Main.
 if __name__ == '__main__':
-    generateDeck()
-    cardDealingPhase()
-    print()
+    for number in range(0, 50):
+        print(f'Round {number}.')
+        resetHands(randomAgent, fixedAgent)
+        generateDeck()
+        cardDealingPhase()
+        print()
+        biddingPhase()
+        print()
+        showdownPhase()
 
+    print(f'{randomAgent.agentType} agent has won a total of ${randomAgent.moneyWon}.')
+    print(f'{fixedAgent.agentType} agent has won a total of ${fixedAgent.moneyWon}.')
+    print(f'{randomAgent.agentType} agent won {randomAgent.wins} times!')
+    print(f'{fixedAgent.agentType} agent won {fixedAgent.wins} times!')
     '''assignHand(randomAgent)
     assignHand(fixedAgent)
     totalPot += randomAgent.bet()
     totalPot += fixedAgent.bet()
     randomAgent.revealHand()
     fixedAgent.revealHand()'''
-    biddingPhase()
-    print()
 
-    randomAgent.calculateHand()
-    fixedAgent.calculateHand()
-    print(f'Total pot: ${totalPot}')
-    compareHands(randomAgent, fixedAgent)
-    print(f'{randomAgent.agentType} agent has won ${randomAgent.moneyWon}.')
-    print(f'{fixedAgent.agentType} agent has won ${fixedAgent.moneyWon}.')
+    '''randomAgent.calculateHand()
+    fixedAgent.calculateHand()'''

@@ -7,6 +7,7 @@ class Agent:
         self.hand = list()
         self.moneyWon = 0
         self.currentBet = 0
+        self.wins = 0
 
     def bet(self):
         if self.agentType == 'random':              # Random agent betting.
