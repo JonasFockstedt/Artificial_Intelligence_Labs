@@ -8,6 +8,7 @@ totalPot = 0
 deck = list()
 randomAgent = agent.Agent('random')
 fixedAgent = agent.Agent('fixed')
+reflexAgent = agent.Agent('reflex')
 
 '''ranks = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
 suits = ['s', 'h', 'd', 'c']'''
@@ -55,54 +56,99 @@ def assignWin(agent):
     print()
 
 
-def biddingPhase():
+def cardDealingPhase(firstAgent, secondAgent):
+    print('Card dealing phase:')
+    generateDeck()
+    resetHands(firstAgent, secondAgent)
+    assignHand(firstAgent)
+    assignHand(secondAgent)
+
+
+def biddingPhase(firstAgent, secondAgent):
     global totalPot
     for x in range(1, 4):
         print(f'Bidding phase {x}:')
-        totalPot += randomAgent.bet()
-        totalPot += fixedAgent.bet()
+        totalPot += firstAgent.bet()
+        totalPot += secondAgent.bet()
         print()
 
 
-def cardDealingPhase():
-    print('Card dealing phase:')
-    assignHand(randomAgent)
-    assignHand(fixedAgent)
-
-
-def showdownPhase():
-    randomAgent.revealHand()
-    fixedAgent.revealHand()
-    compareHands(randomAgent, fixedAgent)
+def showdownPhase(firstAgent, secondAgent):
+    firstAgent.revealHand()
+    secondAgent.revealHand()
+    compareHands(firstAgent, secondAgent)
 
 
 def resetHands(firstAgent, secondAgent):
     firstAgent.hand.clear()
     secondAgent.hand.clear()
 
-
     # Main.
 if __name__ == '__main__':
+    randomVFixedWinner = 0
+    randomVFixedDiff = 0
+    randomVReflexWinner = 0
+    randomVReflexDiff = 0
+    fixedVReflexWinner = 0
+    fixedVReflexDiff = 0
+
+    print(f'Game between random and fixed agent:')
     for number in range(0, 50):
         print(f'Round {number}.')
-        resetHands(randomAgent, fixedAgent)
-        generateDeck()
-        cardDealingPhase()
+        cardDealingPhase(randomAgent, fixedAgent)
         print()
-        biddingPhase()
+        biddingPhase(randomAgent, fixedAgent)
         print()
-        showdownPhase()
+        showdownPhase(randomAgent, fixedAgent)
 
     print(f'{randomAgent.agentType} agent has won a total of ${randomAgent.moneyWon}.')
     print(f'{fixedAgent.agentType} agent has won a total of ${fixedAgent.moneyWon}.')
     print(f'{randomAgent.agentType} agent won {randomAgent.wins} times!')
     print(f'{fixedAgent.agentType} agent won {fixedAgent.wins} times!')
-    '''assignHand(randomAgent)
-    assignHand(fixedAgent)
-    totalPot += randomAgent.bet()
-    totalPot += fixedAgent.bet()
-    randomAgent.revealHand()
-    fixedAgent.revealHand()'''
+    randomVFixedWinner = randomAgent.agentType if randomAgent.moneyWon > fixedAgent.moneyWon else fixedAgent.agentType
+    randomVFixedDiff = max(randomAgent.moneyWon, fixedAgent.moneyWon) - \
+        min(randomAgent.moneyWon, fixedAgent.moneyWon)
+    randomAgent.clear()
+    fixedAgent.clear()
 
-    '''randomAgent.calculateHand()
-    fixedAgent.calculateHand()'''
+    print(f'Game between random and reflex agent:')
+    for number in range(0, 50):
+        print(f'Round {number}.')
+        cardDealingPhase(randomAgent, reflexAgent)
+        print()
+        biddingPhase(randomAgent, reflexAgent)
+        print()
+        showdownPhase(randomAgent, reflexAgent)
+
+    print(f'{randomAgent.agentType} agent has won a total of ${randomAgent.moneyWon}.')
+    print(f'{reflexAgent.agentType} agent has won a total of ${reflexAgent.moneyWon}.')
+    print(f'{randomAgent.agentType} agent won {randomAgent.wins} times!')
+    print(f'{reflexAgent.agentType} agent won {reflexAgent.wins} times!')
+    randomVReflexWinner = randomAgent.agentType if randomAgent.moneyWon > reflexAgent.moneyWon else reflexAgent.agentType
+    randomVReflexDiff = max(randomAgent.moneyWon, reflexAgent.moneyWon) - \
+        min(randomAgent.moneyWon, reflexAgent.moneyWon)
+    randomAgent.clear()
+    reflexAgent.clear()
+
+    print(f'Game between fixed and reflex agent:')
+    for number in range(0, 50):
+        print(f'Round {number}.')
+        cardDealingPhase(fixedAgent, reflexAgent)
+        print()
+        biddingPhase(fixedAgent, reflexAgent)
+        print()
+        showdownPhase(fixedAgent, reflexAgent)
+
+    print(f'{fixedAgent.agentType} agent has won a total of ${fixedAgent.moneyWon}.')
+    print(f'{reflexAgent.agentType} agent has won a total of ${reflexAgent.moneyWon}.')
+    print(f'{fixedAgent.agentType} agent won {fixedAgent.wins} times!')
+    print(f'{reflexAgent.agentType} agent won {reflexAgent.wins} times!')
+    fixedVReflexWinner = fixedAgent.agentType if fixedAgent.moneyWon > reflexAgent.moneyWon else reflexAgent.agentType
+    fixedVReflexDiff = max(fixedAgent.moneyWon, reflexAgent.moneyWon) - \
+        min(fixedAgent.moneyWon, reflexAgent.moneyWon)
+    fixedAgent.clear()
+    reflexAgent.clear()
+
+    print(f'{randomVFixedWinner} agent won the match between random and fixed agent with ${randomVFixedDiff} difference.')
+    print(f'{randomVReflexWinner} agent won the match between random and reflex agent with ${randomVReflexDiff} difference.')
+    print(f'{fixedVReflexWinner} agent won the match between fixed and reflex agent with ${fixedVReflexDiff} difference.')
