@@ -20,6 +20,7 @@ while robot:  # main Control loop
     # Perception Phase: Get information about environment #
     #######################################################
     simulationTime = World.getSimulationTime()
+    # if-statement changed since simulationTime%1000==0 behaved unexpectedly at times.
     if (World.getSimulationTime() - simulationTime) < 2000:
         # print some useful info, but not too often
         print('Time:', simulationTime,
@@ -30,14 +31,15 @@ while robot:  # main Control loop
     ##############################################
     # Reasoning: figure out which action to take #
     ##############################################
+    # Assigns random motoring speed to the wheels, from -2 to +2.
     motorSpeed = dict(speedLeft=random.randrange(-2, 2, 1),
                       speedRight=random.randrange(-2, 2, 1))
 
+    # If energy block is close enough, pick it up.
+    if World.getSensorReading('energySensor').get('distance') < 0.3:
+        World.collectNearestBlock()
+        counter = 0
     ########################################
     # Action Phase: Assign speed to wheels #
     ########################################
-    # assign speed to the wheels
     World.setMotorSpeeds(motorSpeed)
-    # try to collect energy block (will fail if not within range)
-    if World.getSimulationTime() - simulationTime < 2000:
-        print("Trying to collect a block...", World.collectNearestBlock())

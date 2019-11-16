@@ -15,8 +15,8 @@ robot = World.init()
 # print important parts of the robot
 print(sorted(robot.keys()))
 
+# Counter used to determine how much time has passed since an energy block was picked up.
 counter = 0
-stuckCounter = 0
 
 while robot:  # main Control loop
     #######################################################
@@ -34,7 +34,6 @@ while robot:  # main Control loop
     # Reasoning: figure out which action to take #
     ##############################################
     if counter < 200:
-        print("Counter: ", counter)
      # If nearest block is to the left.
         if World.getSensorReading('energySensor').get('direction') < 0:
             motorSpeed = dict(speedLeft=0, speedRight=2)
@@ -42,17 +41,11 @@ while robot:  # main Control loop
         elif World.getSensorReading('energySensor').get('direction') >= 0:
             motorSpeed = dict(speedLeft=2, speedRight=0)
 
-    elif counter > 200:          # When robot has been stuck for a while.
-        stuckCounter += 1
-        print('StuckCounter: ', stuckCounter)
+    # When robot has been stuck for a while.
+    elif counter > 200:
+        # Reverse slightly to the left for 40000 simulation ticks.
         World.execute(dict(speedLeft=-1,
                            speedRight=-0.8), 40000, -1)
-
-        '''if stuckCounter < 500:
-            motorSpeed = dict(speedLeft=random.randrange(-2, 2, 1),
-                              speedRight=random.randrange(-2, 2, 1))
-        else:'''
-        stuckCounter = 0
         counter = 0
 
     # If energy block is close enough, pick it up.
@@ -63,8 +56,5 @@ while robot:  # main Control loop
     ########################################
     # Action Phase: Assign speed to wheels #
     ########################################
-    # assign speed to the wheels
     World.setMotorSpeeds(motorSpeed)
     counter += 1
-
-    # try to collect energy block (will fail if not within range)

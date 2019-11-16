@@ -14,24 +14,28 @@ robot = World.init()
 # print important parts of the robot
 print(sorted(robot.keys()))
 
-#######################################################
-# Perception Phase: Get information about environment #
-#######################################################
-simulationTime = World.getSimulationTime()
+while robot:    # main Control loop
+    #######################################################
+    # Perception Phase: Get information about environment #
+    #######################################################
+    simulationTime = World.getSimulationTime()
 
-# print some useful info, but not too often
-print('Time:', simulationTime,
-      'ultraSonicSensorLeft:', World.getSensorReading(
-          "ultraSonicSensorLeft"),
-      "ultraSonicSensorRight:", World.getSensorReading("ultraSonicSensorRight"))
+    # print some useful info, but not too often
+    print('Time:', simulationTime,
+          'ultraSonicSensorLeft:', World.getSensorReading(
+              "ultraSonicSensorLeft"),
+          "ultraSonicSensorRight:", World.getSensorReading("ultraSonicSensorRight"))
 
-##############################################
-# Reasoning: figure out which action to take #
-##############################################
+    ##############################################
+    # Reasoning: figure out which action to take #
+    ##############################################
 
-World.execute(dict(speedLeft=2, speedRight=2), 6000, -1)    # Go forward.
-World.collectNearestBlock()
-World.execute(dict(speedLeft=0, speedRight=2), 2900, -1)    # Turn left.
-World.collectNearestBlock()
-World.execute(dict(speedLeft=2, speedRight=2), 8500, -1)    # Go forward.
-World.collectNearestBlock()
+    # Go forward for 6000 simulation ticks.
+    World.execute(dict(speedLeft=2, speedRight=2), 6000, -1)
+    World.collectNearestBlock()
+    # Turn left for 2900 simulation ticks.
+    World.execute(dict(speedLeft=0, speedRight=2), 2900, -1)
+    World.collectNearestBlock()
+    # Go forward for 8500 simulation ticks.
+    World.execute(dict(speedLeft=2, speedRight=2), 8500, -1)
+    World.collectNearestBlock()
