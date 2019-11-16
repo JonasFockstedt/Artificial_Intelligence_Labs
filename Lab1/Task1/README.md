@@ -1,1 +1,1 @@
-To be used with the V-REP software.
+Supposed to be used with the V-REP software.
