@@ -27,6 +27,8 @@ class Agent:
             print(f'{self.agentType} agent bet ${bet}.')
             return bet
         elif self.agentType == 'reflex':            # Reflex agent betting.
+            # Betting its card strength +8, since 42 is the highest possible value of a
+            # hand, and $50 the highest possible betting amount.
             print(f'{self.agentType} agent bet ${self.cardStrength+8}.')
             return self.cardStrength+8
 
@@ -54,7 +56,7 @@ class Agent:
         with open(".\\ranks.json") as json_file:
             data = json.load(json_file)
 
-        # Jump every other element in card list.
+        # Jump every other element in card list since suits are in every other element.
         for card in cardList[::2]:
             if card == 'T':
                 cardValue = 10
