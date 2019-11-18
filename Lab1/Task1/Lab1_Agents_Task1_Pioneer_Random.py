@@ -38,7 +38,6 @@ while robot:  # main Control loop
     # If energy block is close enough, pick it up.
     if World.getSensorReading('energySensor').get('distance') < 0.3:
         World.collectNearestBlock()
-        counter = 0
     ########################################
     # Action Phase: Assign speed to wheels #
     ########################################
