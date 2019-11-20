@@ -76,6 +76,8 @@ def biddingPhase(firstAgent, secondAgent):
 def showdownPhase(firstAgent, secondAgent):
     firstAgent.revealHand()
     secondAgent.revealHand()
+    firstAgent.assignOpponentHand(secondAgent)
+    secondAgent.assignOpponentHand(firstAgent)
     compareHands(firstAgent, secondAgent)
 
 # Clear hand of two agents.

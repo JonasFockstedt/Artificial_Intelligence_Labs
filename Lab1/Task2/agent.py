@@ -6,6 +6,7 @@ class Agent:
     def __init__(self, agentType):
         self.agentType = agentType
         self.hand = list()
+        self.opponetHand = list()
         self.moneyWon = 0
         self.currentBet = 0
         self.wins = 0
@@ -79,3 +80,6 @@ class Agent:
         self.currentBet = 0
         self.wins = 0
         self.cardStrength = 0
+
+    def assignOpponentHand(self, otherAgent):
+        self.handOfOpponent = otherAgent.hand
