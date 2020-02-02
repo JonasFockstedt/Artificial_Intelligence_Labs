@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import cross_val_score
 
 Data = np.loadtxt(open('Lab4Data.csv', 'rb'),
                   delimiter=';', skiprows=1)
@@ -39,7 +40,9 @@ for kNN in kNNClassifiers:
     ax.scatter(kNN.n_neighbors, sum(accuracies)/len(accuracies),
                label=f'{kNN.n_neighbors} neighbors with {list(distanceMethods.keys())[list(distanceMethods.values()).index(list(kNN.get_params().values())[6])]} distance')
 
-
+for kNN in kNNClassifiers:
+    print(
+        f'Cross validation scores: {cross_val_score(kNN, Input_test, Target_test, cv=100)}')
 plt.ylabel("Average accuracy")
 plt.xlabel("Number of neighbors")
 plt.legend()
