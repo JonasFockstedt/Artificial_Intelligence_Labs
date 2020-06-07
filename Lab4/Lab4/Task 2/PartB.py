@@ -1,9 +1,13 @@
 import pandas as pd
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 from LookUpTables import actions, hands, cardRanks
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 # To remove commas between each attribute.
@@ -127,23 +131,66 @@ def kNNClassifier(train_set, p2_final_actions_train, test_set, p2_final_actions_
     knn.fit(train_set, p2_final_actions_train)
     accuracy = knn.score(test_set,
                          p2_final_actions_test)
-    print(f'Accuracy: {accuracy*100}%')
+    return accuracy*100
+
+
+def RandomForest(train_set, p2_final_actions_train, test_set, p2_final_actions_test):
+    rfc = RandomForestClassifier()
+    rfc.fit(train_set, p2_final_actions_train)
+    accuracy = rfc.score(test_set, p2_final_actions_test)
+    return accuracy*100
+
+
+def MultiLayerPerceptron(train_set, p2_final_actions_train, test_set, p2_final_actions_test):
+    mlp = MLPClassifier()
+    mlp.fit(train_set, p2_final_actions_train)
+    accuracy = mlp.score(test_set, p2_final_actions_test)
+    return accuracy*100
 
 
 if __name__ == '__main__':
     data = np.loadtxt(open('Lab4PokerData.txt', 'rb'),
                       delimiter='\n ', dtype='str')
 
+    # Pre-processing of data.
     actions_list = removeCommas(data)
     removeEmptyString(actions_list)
     actions_list = ConvertToNumerical(actions_list)
 
-    # Split data.
-    train_set, test_set = train_test_split(actions_list, test_size=0.2)
+    # 10 rounds.
+    rounds = np.arange(1, 11, 1)
+    scores = {'k-Nearest Neighbor': 0,
+              'Random Forest': 0, 'Multilayer Perceptron': 0}
+    for current_round in rounds:
+        # Split data.
+        train_set, test_set = train_test_split(actions_list, test_size=0.2)
 
-    # Extract final actions of p2 (target values).
-    p2_final_actions_train = extractPlayer2FinalActionsTest(train_set)
-    p2_final_actions_test = extractPlayer2FinalActionsTest(test_set)
+        # Extract final actions of p2 (target values).
+        p2_final_actions_train = extractPlayer2FinalActionsTest(train_set)
+        p2_final_actions_test = extractPlayer2FinalActionsTest(test_set)
 
-    kNNClassifier(train_set, p2_final_actions_train,
-                  test_set, p2_final_actions_test)
+        scores['k-Nearest Neighbor'] += kNNClassifier(train_set, p2_final_actions_train,
+                                                      test_set, p2_final_actions_test)
+        scores['Random Forest'] += RandomForest(train_set, p2_final_actions_train,
+                                                test_set, p2_final_actions_test)
+        scores['Multilayer Perceptron'] += MultiLayerPerceptron(train_set, p2_final_actions_train,
+                                                                test_set, p2_final_actions_test)
+
+    # Make an average of the accuracy for each of the models.
+    for key in scores.keys():
+        scores[key] /= len(rounds)
+
+    # Set plot defaults using seaborn formatting.
+    sns.set()
+
+    y_pos = np.arange(len(scores))
+    plt.bar(x=y_pos, align='center', height=scores.values())
+
+    plt.ylabel('Average accuracy (%)')
+    plt.xticks(y_pos, scores.keys())
+    plt.title('Classification performance')
+
+    plt.show()
+
+    # Reset formatting.
+    sns.reset_orig()
