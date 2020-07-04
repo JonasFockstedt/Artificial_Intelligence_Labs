@@ -59,11 +59,14 @@ def search(_map, start, goal):
     # init. starting node
     parent = None
     g = 0
+    
+    solved_map = np.copy(_map)
 
     # if there is still nodes to open
     while frontier:
         # Pick random discovered node to be the current node.
         current_node = random.choice(frontier)
+        
         visited_nodes[0].append(current_node[1])
         visited_nodes[1].append(current_node[2])
 
@@ -83,20 +86,23 @@ def search(_map, start, goal):
             frontier.append([cost, next[0], next[1]])
             # add to path
             came_from[tuple(next)] = current_node[1:]
-
+            
+        if solved_map[current_node[1], current_node[2]] != -2:
+            solved_map[current_node[1]][current_node[2]] = g
         g += 1
 
-    return solve_path(came_from, start, goal)
+    return solve_path(came_from, start, goal), solved_map
 
+
+# Returns the soled path.
 def solve_path(came_from, start, goal):
     solved_path = [[],[]]
     current_node = goal
-    solved_path[0].append(current_node[1])
-    solved_path[1].append(current_node[0])
+    solved_path[0].append(current_node[1])    # Required to swap places between x and y coordinate.
+    solved_path[1].append(current_node[0])    # Required to swap places between x and y coordinate.
     while current_node != start:
         current_node = came_from[tuple(current_node)]
         solved_path[0].append(current_node[1])
         solved_path[1].append(current_node[0])
-        print(current_node)
     return solved_path
     

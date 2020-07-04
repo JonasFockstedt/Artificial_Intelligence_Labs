@@ -56,6 +56,8 @@ def search(_map, start, goal):
     # init. starting node
     parent = None
     g = 0
+    
+    solved_map = np.copy(_map)
 
     # If there is still nodes to open.
     while not frontier.isEmpty():
@@ -82,6 +84,21 @@ def search(_map, start, goal):
             # add to path
             came_from[tuple(next)] = current_node
 
+        if solved_map[current_node[0], current_node[1]] != -2:
+            solved_map[current_node[0]][current_node[1]] = g
         g += 1
 
-    return came_from, cost, visited_nodes
+    return solve_path(came_from, start, goal), solved_map
+
+
+# Returns the soled path.
+def solve_path(came_from, start, goal):
+    solved_path = [[],[]]
+    current_node = goal
+    solved_path[0].append(current_node[1])
+    solved_path[1].append(current_node[0])
+    while current_node != start:
+        current_node = came_from[tuple(current_node)]
+        solved_path[0].append(current_node[1])
+        solved_path[1].append(current_node[0])
+    return solved_path

@@ -61,6 +61,8 @@ def search(_map, start, goal):
     parent = None
     g = 0
     
+    solved_map = np.copy(_map)
+    
     print('Searching...')
 
     # if there is still nodes to open
@@ -90,12 +92,12 @@ def search(_map, start, goal):
             # add to path
             came_from[tuple(next)] = current_node[1:]
 
+        if solved_map[current_node[1], current_node[2]] != -2:
+            solved_map[current_node[1]][current_node[2]] = g    
+            
         g += 1
-        counter+=1
-        if counter > 20:
-            break
 
-    return solve_path(came_from, start, goal)
+    return solve_path(came_from, start, goal), solved_map
 
 
 # Returns the soled path.
