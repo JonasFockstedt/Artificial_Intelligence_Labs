@@ -62,6 +62,7 @@ def search(_map, start, goal):
 
     # if there is still nodes to open
     while frontier:
+        # Pick random discovered node to be the current node.
         current_node = random.choice(frontier)
         visited_nodes[0].append(current_node[1])
         visited_nodes[1].append(current_node[2])
@@ -74,7 +75,6 @@ def search(_map, start, goal):
         # Implement get_neighbors function (return nodes to expand next)
         # (make sure you avoid repetitions!)
         for next in get_neighbors(current_node):
-
             # compute cost to reach next cell
             # Implement cost function
             cost = cost_function(g)
@@ -82,8 +82,21 @@ def search(_map, start, goal):
             # add next cell to open list
             frontier.append([cost, next[0], next[1]])
             # add to path
-            came_from[tuple(next)] = current_node
+            came_from[tuple(next)] = current_node[1:]
 
         g += 1
 
-    return came_from, cost, visited_nodes
+    return solve_path(came_from, start, goal)
+
+def solve_path(came_from, start, goal):
+    solved_path = [[],[]]
+    current_node = goal
+    solved_path[0].append(current_node[1])
+    solved_path[1].append(current_node[0])
+    while current_node != start:
+        current_node = came_from[tuple(current_node)]
+        solved_path[0].append(current_node[1])
+        solved_path[1].append(current_node[0])
+        print(current_node)
+    return solved_path
+    
