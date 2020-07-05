@@ -2,19 +2,33 @@ import numpy as np
 import math
 import heapq
 
+
 # Priority Queue based on heapq
 class PriorityQueue:
     def __init__(self):
         self.elements = []
+
     def isEmpty(self):
         return len(self.elements) == 0
+
     def add(self, item, priority):
-        heapq.heappush(self.elements,(priority,item))
+        heapq.heappush(self.elements, (priority, item))
+
     def remove(self):
         return heapq.heappop(self.elements)[1]
 
-# An example of search algorithm
-# modify it and implment the missing part
+
+"""Returns the neighbors of the current node."""
+def get_neighbors(current_node):
+    pass
+    print(current_node)
+
+
+"""Calculates the cost to reach next node."""
+def cost_function():
+    pass
+"""# An example of search algorithm
+# modify it and implement the missing part
 def search(map, start, goal, ...):
 
     # cost moving to another cell
@@ -58,3 +72,4 @@ def search(map, start, goal, ...):
             came_from[next] = current
 
     return came_from, cost
+"""
