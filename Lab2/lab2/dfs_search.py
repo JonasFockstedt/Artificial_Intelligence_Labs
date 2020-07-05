@@ -1,7 +1,6 @@
-from search_algorithm import PriorityQueue
-from Node import Node
 from operator import itemgetter
 import numpy as np
+import path_planning as pp
 import random
 
 
@@ -25,6 +24,9 @@ def search(_map, start, goal):
             # neighbor_node[0] <= len(_map) - if the neighbor node is outside the map.
             # neighbor_node[1] <= len(_map[0]) - if the neighbor node is outside the map.
             if -1 not in neighbor_node and neighbor_node[0] < len(_map) and neighbor_node[1] < len(_map[0]):
+                # neighbor_node not in visited_states - see if we have been at this node before
+                # neighbor_node not in in_frontier - see if this node has already been discovered (is in frontier list)
+                # _map[neighbor_node[0]][neighbor_node[1]] != -1 - check if the next state is not an obstacle
                 if neighbor_node not in visited_states and neighbor_node not in in_frontier and _map[neighbor_node[0]][neighbor_node[1]] != -1:
                     possible_actions.append(neighbor_node)
 
@@ -33,14 +35,13 @@ def search(_map, start, goal):
     # Computes the cost to reach the next cell.
 
     def cost_function(g):
-        return g + 1
+        return g + moving_cost
 
     # cost moving to another cell
     moving_cost = 1
 
     # open list
     frontier = []
-    #frontier = PriorityQueue()
 
     start = start.tolist()
     goal = goal.tolist()
@@ -57,8 +58,6 @@ def search(_map, start, goal):
     cost = {}
     visited_nodes = [[],[]]
 
-    # init. starting node
-    parent = None
     g = 0
     
     solved_map = np.copy(_map)
@@ -68,9 +67,8 @@ def search(_map, start, goal):
     # if there is still nodes to open
     while frontier:
         counter = 0
-        # Pick node which has the biggest cost.
+        # Pick node which has the greatest cost.
         current_node = frontier.pop()
-        #print(current_node)
         visited_nodes[0].append(current_node[1])
         visited_nodes[1].append(current_node[2])
 
@@ -95,21 +93,6 @@ def search(_map, start, goal):
         if solved_map[current_node[1], current_node[2]] != -2:
             solved_map[current_node[1]][current_node[2]] = g    
             
-        g += 1
+        g += moving_cost
 
-    return solve_path(came_from, start, goal), solved_map
-
-
-# Returns the soled path.
-def solve_path(came_from, start, goal):
-    print('Calculating solved path...')
-    solved_path = [[],[]]
-    current_node = goal
-    solved_path[0].append(current_node[1])    # Required to swap places between x and y coordinate.
-    solved_path[1].append(current_node[0])    # Required to swap places between x and y coordinate.
-    while current_node != start:
-        current_node = came_from[tuple(current_node)]
-        solved_path[0].append(current_node[1])
-        solved_path[1].append(current_node[0])
-    return solved_path
-    
+    return pp.solve_path(came_from, start, goal), solved_map
