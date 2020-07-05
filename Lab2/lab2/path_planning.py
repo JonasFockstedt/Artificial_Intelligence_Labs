@@ -219,3 +219,18 @@ def plotMap(map2d_, path_, title_=''):
 def findStartGoal(_map_):
     return np.array([np.where(_map_ == -2)[0][0], np.where(_map_ == -2)[1][0]]), \
             np.array([np.where(_map_ == -3)[0][0], np.where(_map_ == -3)[1][0]])
+
+
+# Returns the soled path.
+def solve_path(came_from, start, goal):
+    print('Calculating solved path...')
+    solved_path = [[],[]]
+    current_node = goal
+    solved_path[0].append(current_node[1])    # Required to swap places between x and y coordinate.
+    solved_path[1].append(current_node[0])    # Required to swap places between x and y coordinate.
+    while current_node != start:
+        current_node = came_from[tuple(current_node)]   # For every iteration, moves back one step towards the starting node.
+        solved_path[0].append(current_node[1])
+        solved_path[1].append(current_node[0])
+    return solved_path
+    
