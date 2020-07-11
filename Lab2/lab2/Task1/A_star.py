@@ -3,7 +3,7 @@ import numpy as np
 import path_planning as pp
 import heuristics
 
-def search(_map, start, goal, metric='euclidean'):
+def search(_map, start, goal, metric='euclidean', info=None):
     # Finds the neighbors of the given node.
     def get_neighbors(node):
         actions = [[-1, 0],  # go up
@@ -44,6 +44,9 @@ def search(_map, start, goal, metric='euclidean'):
     elif metric == 'manhattan':
         print('Calculating manhattan distance map...')
         heuristic_map = heuristics.manhattan(_map, goal)
+    elif metric == 'special':
+        print('Calculating special distance map...')
+        heuristic_map = heuristics.special(_map, start, goal, info)
     
     # cost moving to another cell
     moving_cost = 1
@@ -65,6 +68,7 @@ def search(_map, start, goal, metric='euclidean'):
     visited_nodes = [[],[]]
 
     g = 0
+    exp_nodes = 0
     
     solved_map = np.copy(_map)
     
@@ -76,6 +80,7 @@ def search(_map, start, goal, metric='euclidean'):
         current_node = frontier.pop(0)
         visited_nodes[0].append(current_node[3])
         visited_nodes[1].append(current_node[4])
+        exp_nodes += 1
 
         # check if the goal is reached
         if current_node[3:] == goal:
@@ -101,4 +106,4 @@ def search(_map, start, goal, metric='euclidean'):
         
         g += moving_cost
 
-    return pp.solve_path(came_from, start, goal), solved_map
+    return pp.solve_path(came_from, start, goal), solved_map, exp_nodes
