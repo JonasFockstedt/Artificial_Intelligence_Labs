@@ -73,15 +73,6 @@ class PokerGame():
                   Nodes expanded: {self.agent.nodesExpanded} \
                   Amount of hands dealt: {state.nn_current_hand}')
 
-    def getResultingData(self):
-        nodeDepth = 0
-        currentNode = self.end_state_
-        while currentNode.parent_state != None:
-            nodeDepth += 1
-            currentNode = currentNode.parent_state
-        resultString = f'Agent stack: {self.end_state_.agent.stack}, Opponent stack: {self.end_state_.opponent.stack} Node depth: {nodeDepth} Nodes expanded: {self.end_state_.nodesExpanded} Hands: {self.end_state_.nn_current_hand}'
-        return resultString
-
 
 """
 Player class
