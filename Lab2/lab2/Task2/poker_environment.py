@@ -40,6 +40,7 @@ PHASE = {'INIT_DEALING', 'BIDDING', 'SHOWDOWN'}
 AGENT_ACTIONS = {'CALL', 'BET5', 'BET10', 'BET25', 'FOLD'}
 BETTING_ACTIONS = {'BET5', 'BET10', 'BET25'}
 
+
 def poker_strategy_example(opponent_hand,
                            opponent_hand_rank,
                            opponent_stack,
@@ -60,11 +61,15 @@ def poker_strategy_example(opponent_hand,
     def get_strength_interval(type_rank, hand_rank):
         #strength = type_rank*13+hand_rank
         strength = Types[type_rank]*13+Ranks[hand_rank]
-        if strength <= 13: return 'weak'
-        elif strength <= 13*3: return 'median'
-        else: return 'strong'
+        if strength <= 13:
+            return 'weak'
+        elif strength <= 13*3:
+            return 'median'
+        else:
+            return 'strong'
 
-    opponent_hand_strength = get_strength_interval(opponent_hand, opponent_hand_rank)
+    opponent_hand_strength = get_strength_interval(
+        opponent_hand, opponent_hand_rank)
 
     if bidding_nr >= max_phase:
         opponent_action = 'CALL'
@@ -100,7 +105,7 @@ def poker_strategy_example(opponent_hand,
 
             elif bidding_nr >= 2:
                 if agent_action_value == 25:
-                    opponent_action = 'BEt'
+                    opponent_action = 'BET'
                     opponent_action_value = 25
                 else:
                     opponent_action = 'CALL'
@@ -134,11 +139,15 @@ def poker_strategy_example(opponent_hand,
 Generate the cards for two agents and each agent has 5 cards in its hand.
 There are total 52 cards in the games, and one card CANNOT be in both hands.
 """
+
+
 def generate_2hands(nn_card=5):
     import random
-    deck_ =[rank_+suit_ for suit_ in list(Suits.keys()) for rank_ in list(Ranks.keys())]
+    deck_ = [rank_+suit_ for suit_ in list(Suits.keys())
+             for rank_ in list(Ranks.keys())]
     cards_ = random.sample(deck_, nn_card*2)
     return cards_[:nn_card], cards_[nn_card:]
+
 
 fixed_hands = [generate_2hands() for xx in range(20)]
 
@@ -188,6 +197,8 @@ hand_examples = [
     ['As', 'Ks', 'Qs', 'Js', 'Ts'], # straigh
 ]
 """
+
+
 def identify_hand(Hand_):
 
     # Get the type of Hand
@@ -271,7 +282,8 @@ def identify_hand(Hand_):
 
     elif count_ == 0:
         def sortHand(Hand_):
-            hand_sorted_ = sorted([[card_, Ranks[card_[0]]] for card_ in Hand_], key=itemgetter(1))[:]
+            hand_sorted_ = sorted([[card_, Ranks[card_[0]]]
+                                   for card_ in Hand_], key=itemgetter(1))[:]
             return [card_[0] for card_ in hand_sorted_]
 
         Hand_ = sortHand(Hand_)
@@ -291,5 +303,3 @@ def identify_hand(Hand_):
     else:
         exit(5664)
     return score
-
-
