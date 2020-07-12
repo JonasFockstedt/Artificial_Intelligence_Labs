@@ -109,7 +109,7 @@ def generateMap2d_obstacle(size_):
     return map2d, [ytop, ybot, minx]
 
 
-def plotMap(map2d_, path_, title_=''):
+def plotMap(map2d_, path_, title_='', filename_=''):
     '''Plots a map (image) of a 2d matrix with a path from start point to the goal point. 
         cells with a value of 0: Free cell; 
                           -1: Obstacle;
@@ -181,7 +181,7 @@ def plotMap(map2d_, path_, title_=''):
     plt.xlim(0, map2d_.shape[1])
     plt.gca().invert_yaxis() # Invert the y-axis to match the overview plot.
     plt.draw()
-    # plt.savefig()
+    plt.savefig(filename_)
     plt.show()
 
 
